@@ -39,7 +39,7 @@ const UsuarioSchema = Schema(
     //Aqui escogemos que llaves del Usuario no se van a mostrar en la respuesta del body
 
 UsuarioSchema.methods.toJSON = function () {
-    const { __v,  estado, google, img,  ...usuarioojo } = this.toObject();
+    const { __v,  google, img,   ...usuarioojo } = this.toObject();
     return usuarioojo;
 }
 

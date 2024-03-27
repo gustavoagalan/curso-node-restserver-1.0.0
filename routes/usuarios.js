@@ -13,15 +13,16 @@ const router = Router();
 
 router.get('/', usuariosGet );
 
-router.put('/:id', 
-[ check('id', 'No es un ID Valido').isMongoId(),
-  check('id').custom(existeUsuarioPorId),
-  check('rol').custom(esRoleValido),
+router.put('/:id',
+[ check('id', 'No es un ID Valido de MongoDB').isMongoId().bail().custom(existeUsuarioPorId),
+  //.bail() deja de ejecutar validaciones si alguna de las anteriores ha fallado. 
+  //Útil para evitar que se ejecute un validador personalizado que toca una base de datos
+  // o una API externa cuando sabe que fallará.
+  // check('id').custom(existeUsuarioPorId),check('rol').custom(esRoleValido),
 validarCampos
-
-
 ],
 usuariosPut );
+
 router.post('/', 
 [   
     check('nombre','El nombre es obligatorio').not().isEmpty(),
@@ -33,8 +34,20 @@ router.post('/',
    validarCampos
 ],
 usuariosPost );
-router.delete('/', usuariosDelete );
+
+router.delete('/:id', 
+[
+   check('id', 'No es un ID Valido de MongoDB').isMongoId().bail().custom(existeUsuarioPorId),
+   validarCampos
+
+
+
+],
+usuariosDelete );
+
 router.patch('/', usuariosPatch );
-
-
 module.exports = router;
+
+
+
+
